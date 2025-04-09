@@ -1,5 +1,6 @@
 import Loguin from "../pages/Login"
 import Home from "../Home"
+import RutaProtegida from "../components/RutaProtegida"
 let enrutador = [
     {
         path: '/',
@@ -7,7 +8,7 @@ let enrutador = [
     },
     {
         path: '/home',
-        element: <Home/>
+        element: <RutaProtegida proteger ={<Home/>} />
     }
 ]
 export default enrutador

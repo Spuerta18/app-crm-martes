@@ -1,11 +1,33 @@
 import { useState } from 'react'
+import { usuarios } from '../services/database'
+import { alerta,generarToken } from '../helpers/funciones'
+import { useNavigate } from 'react-router-dom'
 import './Login.css'
+
+
 function Login() {
-  const [getUser, setUser] = useState("")
-  const [getPassword, setPassword] = useState("")
+  const [getUser, setUser] = useState()
+  const [getPassword, setPassword] = useState()
+  let redireccion = useNavigate()
+
+
+function buscarUsuario(){
+
+ let usuario = usuarios.find((item)=> getUser === item.usuario && getPassword === item.contrasena)
+ return usuario
+}
 
   function iniciarSesion(){
-    if(getUser ==)
+    if(buscarUsuario()){
+      let tokenAcceso = generarToken()
+      localStorage.setItem("token", tokenAcceso)
+      // localStorage.setItem()
+      alerta("Bienvenido", "Acceso al sistema", "success")
+      redireccion("/home")
+
+    }else{
+alerta("Error", "Error de credenciales", "error")
+    }
   }
   return (
     <div className="container">
@@ -13,9 +35,9 @@ function Login() {
       <form className="form">
         <div className="form_front">
           <div className="form_details">Login</div>
-          <input onChange ={(e)=> console.log(e.target.value)}type="text" className="input" placeholder="Username" />
-          <input onChange ={(e)=> console.log(e.target.value)} type="text" className="input" placeholder="Password" />
-          <button className="btn">Login</button>
+          <input onChange ={(e)=> setUser(e.target.value)}type="text" className="input" placeholder="Username" />
+          <input onChange ={(e)=> setPassword(e.target.value)} type="text" className="input" placeholder="Password" />
+          <button type ="button"  onClick = {iniciarSesion}  className="btn">Login</button>
           <span className="switch">Don't have an account?
             <label for="signup_toggle" className="signup_tog">
               Sign Up
