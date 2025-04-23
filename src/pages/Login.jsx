@@ -1,14 +1,25 @@
-import { useState } from 'react'
-import { usuarios } from '../services/database'
-import { alerta,generarToken } from '../helpers/funciones'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { alerta, generarToken } from '../helpers/funciones'
+//import { usuarios } from '../services/database'
 import './Login.css'
-
+let apiUsuarios = "https://back-json-server-martes.onrender.com/usuarios "
 
 function Login() {
   const [getUser, setUser] = useState()
-  const [getPassword, setPassword] = useState()
-  let redireccion = useNavigate()
+  const [getPassword, setPassword] = useState();
+  const[usuarios,setUsuarios]=useState([]);
+  let redireccion = useNavigate();
+
+
+  function getUsuarios(){
+    fetch(apiUsuarios)
+    .then(response => response.json())
+    .then(data => setUsuarios(data));
+  }
+useEffect(() =>{
+  getUsuarios();
+},[])
 
 
 function buscarUsuario(){
@@ -21,6 +32,7 @@ function buscarUsuario(){
     if(buscarUsuario()){
       let tokenAcceso = generarToken()
       localStorage.setItem("token", tokenAcceso)
+      localStorage.setItem("usuario", JSON.stringify(buscarUsuario()))
       // localStorage.setItem()
       alerta("Bienvenido", "Acceso al sistema", "success")
       redireccion("/home")
@@ -39,7 +51,7 @@ alerta("Error", "Error de credenciales", "error")
           <input onChange ={(e)=> setPassword(e.target.value)} type="text" className="input" placeholder="Password" />
           <button type ="button"  onClick = {iniciarSesion}  className="btn">Login</button>
           <span className="switch">Don't have an account?
-            <label for="signup_toggle" className="signup_tog">
+            <label htmlFor="signup_toggle" className="signup_tog">
               Sign Up
             </label>
           </span>
@@ -52,7 +64,7 @@ alerta("Error", "Error de credenciales", "error")
           <input type="text" className="input" placeholder="Confirm Password" />
           <button className="btn">Signup</button>
           <span className="switch">Already have an account?
-            <label for="signup_toggle" className="signup_tog">
+            <label htmlFor="signup_toggle" className="signup_tog">
               Sign In
             </label>
           </span>
